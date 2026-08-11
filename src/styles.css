@@ -1155,12 +1155,16 @@ h2 em {
     padding-bottom: 34px;
   }
 
-  .hero-copy { max-width: 100%; }
+  .hero-copy {
+    max-width: 100%;
+    margin-inline: auto;
+    text-align: center;
+  }
 
   .hero-copy > .eyebrow { display: none; }
 
   .hero-brand {
-    margin: 0 0 20px 3px;
+    margin: 0 auto 20px;
   }
 
   .hero-brand > span { font-size: clamp(2.25rem, 11vw, 2.75rem); }
@@ -1171,10 +1175,13 @@ h2 em {
   .hero-silhouette { width: 100vw; right: -51%; bottom: -4%; opacity: 0.18; }
   .hero-glow { width: 95vw; left: 48%; top: 18%; }
   .hero-grid { left: 30%; }
-  .hero-lead { max-width: 280px; }
+  .hero-lead {
+    max-width: 310px;
+    margin-inline: auto;
+  }
 
   .hero-lead {
-    margin: 16px 0 5px;
+    margin: 16px auto 5px;
     font-size: 1rem;
     line-height: 1.35;
   }
@@ -1189,7 +1196,7 @@ h2 em {
     align-items: stretch;
     max-width: 380px;
     gap: 7px;
-    margin-top: 18px;
+    margin: 18px auto 0;
   }
 
   .button {
@@ -1199,9 +1206,9 @@ h2 em {
   }
 
   .hero-actions .button-ghost {
-    width: max-content;
+    width: 100%;
     min-height: 44px;
-    justify-content: flex-start;
+    justify-content: center;
     padding: 8px 3px;
     border-color: transparent;
     background: transparent;
@@ -1211,10 +1218,12 @@ h2 em {
 
   .hero-manifesto {
     position: static;
-    max-width: calc(100vw - 68px);
+    max-width: 100%;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 8px 10px;
     margin-top: 19px;
+    text-align: center;
     line-height: 1.5;
   }
 
