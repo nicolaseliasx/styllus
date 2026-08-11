@@ -4,6 +4,12 @@ import '@fontsource/oswald/latin-700.css';
 import './styles.css';
 import { getCampaignState } from './campaign.js';
 
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+if (!reducedMotionQuery.matches) {
+  window.requestAnimationFrame(() => document.body.classList.add('is-motion-ready'));
+}
+
 const WHATSAPP_URL =
   'https://api.whatsapp.com/send?phone=5548991885129&text=Ol%C3%A1%21+Gostaria+de+conhecer+melhor+a+Academia+Styllus.+Quero+saber+sobre+os+planos%2C+hor%C3%A1rios+e+a+reinaugura%C3%A7%C3%A3o.';
 
@@ -124,7 +130,7 @@ const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY
 updateHeader();
 window.addEventListener('scroll', updateHeader, { passive: true });
 
-if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+if ('IntersectionObserver' in window && !reducedMotionQuery.matches) {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
