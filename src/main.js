@@ -134,14 +134,9 @@ const valueRotator = document.querySelector('[data-value-rotator]');
 
 if (valueRotator) {
   const slides = [...valueRotator.querySelectorAll('[data-value-slide]')];
-  const AUTOPLAY_DELAY = 7000;
+  const AUTOPLAY_DELAY = 5000;
   let activeIndex = 0;
   let autoplayTimer;
-
-  const canAutoplay = () => (
-    !reducedMotionQuery.matches
-    && !document.hidden
-  );
 
   function showValue(index) {
     activeIndex = (index + slides.length) % slides.length;
@@ -149,40 +144,37 @@ if (valueRotator) {
       const isActive = slideIndex === activeIndex;
       slide.classList.toggle('is-active', isActive);
       slide.setAttribute('aria-hidden', String(!isActive));
-
-      if (!isActive || reducedMotionQuery.matches) {
-        slide.classList.remove('is-pulsing');
-        return;
-      }
-
-      slide.classList.remove('is-pulsing');
-      void slide.offsetWidth;
-      slide.classList.add('is-pulsing');
     });
   }
 
-  function stopAutoplay() {
-    window.clearTimeout(autoplayTimer);
-  }
-
-  function scheduleAutoplay() {
+  function startAutoplay() {
     stopAutoplay();
-    if (!canAutoplay()) return;
-    autoplayTimer = window.setTimeout(() => {
+    if (reducedMotionQuery.matches || document.hidden) return;
+    autoplayTimer = window.setInterval(() => {
       showValue(activeIndex + 1);
-      scheduleAutoplay();
     }, AUTOPLAY_DELAY);
   }
 
-  document.addEventListener('visibilitychange', scheduleAutoplay);
-  window.addEventListener('pageshow', scheduleAutoplay);
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+  window.addEventListener('pageshow', startAutoplay);
+  window.addEventListener('pagehide', stopAutoplay);
   reducedMotionQuery.addEventListener?.('change', () => {
     if (reducedMotionQuery.matches) showValue(0);
-    scheduleAutoplay();
+    startAutoplay();
   });
 
   showValue(0);
-  scheduleAutoplay();
+  startAutoplay();
 }
 
 const revealElements = [...document.querySelectorAll('.reveal')];
@@ -197,7 +189,14 @@ function updateRevealProgress() {
 
   if (reducedMotionQuery.matches) {
     document.body.classList.remove('is-scroll-motion-ready');
-    revealElements.forEach((element) => element.classList.add('is-visible'));
+    revealElements.forEach((element) => {
+      element.style.opacity = '1';
+      element.style.filter = 'none';
+      element.style.webkitFilter = 'none';
+      element.style.transform = 'none';
+      element.style.webkitTransform = 'none';
+      element.classList.add('is-visible');
+    });
     return;
   }
 
@@ -213,10 +212,18 @@ function updateRevealProgress() {
     const rawProgress = clamp((baseProgress - stagger) / (1 - stagger));
     const progress = rawProgress * rawProgress * (3 - (2 * rawProgress));
     const opacity = clamp(progress * 1.05);
+    const offset = (1 - progress) * 20;
+    const blur = (1 - progress) * 2.8;
 
     element.style.setProperty('--reveal-progress', opacity.toFixed(4));
-    element.style.setProperty('--reveal-offset', `${((1 - progress) * 20).toFixed(2)}px`);
-    element.style.setProperty('--reveal-blur', `${((1 - progress) * 2.8).toFixed(2)}px`);
+    element.style.setProperty('--reveal-offset', `${offset.toFixed(2)}px`);
+    element.style.setProperty('--reveal-blur', `${blur.toFixed(2)}px`);
+    element.style.opacity = opacity.toFixed(4);
+    element.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+    element.style.webkitTransform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+    element.style.filter = `blur(${blur.toFixed(2)}px)`;
+    element.style.webkitFilter = `blur(${blur.toFixed(2)}px)`;
+
     element.classList.toggle('is-visible', progress >= 0.999);
   });
 

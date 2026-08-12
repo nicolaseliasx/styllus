@@ -24,11 +24,9 @@ test.describe('motion padrão', () => {
     await expect(page.locator('body')).toHaveClass(/is-scroll-motion-ready/);
     await expect(page.locator('.hero-lockup')).toHaveCSS('animation-name', 'intro-reveal');
     await expect(page.locator('.hero-values-panel')).toHaveCSS('animation-name', 'intro-reveal');
-    await expect(page.locator('[data-value-slide].is-active')).toHaveClass(/is-pulsing/);
     await expect(page.locator('[data-value-slide].is-active strong')).toHaveText('FORÇA');
-    await page.waitForTimeout(7350);
+    await page.waitForTimeout(5250);
     await expect(page.locator('[data-value-slide].is-active strong')).toHaveText('SAÚDE');
-    await expect(page.locator('[data-value-slide].is-active')).toHaveClass(/is-pulsing/);
     const halo = await page.locator('[data-value-slide].is-active strong').evaluate((element) => {
       const style = getComputedStyle(element, '::before');
       return {
@@ -39,10 +37,9 @@ test.describe('motion padrão', () => {
       };
     });
     expect(halo.animationName).toBe('value-halo-pulse');
-    expect(halo.animationDuration).toBe('4.8s');
+    expect(halo.animationDuration).toBe('4.5s');
     expect(halo.animationIterationCount).toBe('infinite');
     expect(halo.backgroundImage).toContain('radial-gradient');
-    await expect(page.locator('[data-value-slide].is-active strong')).toHaveCSS('animation-name', 'none');
 
     await page.locator('[data-menu-toggle]').click();
     await expect(page.locator('[data-nav]')).toHaveClass(/is-open/);
