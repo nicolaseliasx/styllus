@@ -893,12 +893,14 @@ body.is-motion-ready .hero-value.is-pulsing strong::before {
 }
 
 .about-title-wrap {
+  display: flex;
+  align-items: center;
   margin: 12px 0 20px;
 }
 
 .about-title-logo {
   display: block;
-  width: clamp(260px, 80%, 420px);
+  width: clamp(220px, 32vw, 340px);
   max-width: 100%;
   height: auto;
   margin: 0;
@@ -1216,9 +1218,14 @@ body.is-scroll-motion-ready .reveal {
 
   .hero-heading,
   .hero-details {
-    width: 100%;
+    width: 100% !important;
     max-width: 650px;
     justify-self: center;
+    text-align: center;
+  }
+
+  .hero h1 {
+    width: 100%;
     text-align: center;
   }
 
@@ -1267,6 +1274,16 @@ body.is-scroll-motion-ready .reveal {
 
   .about-layout { grid-template-columns: 1fr; }
   .about-visual { min-height: 410px; }
+  .about-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .about-copy .eyebrow { justify-content: center; }
+  .about-title-wrap { justify-content: center; width: 100%; }
+  .about-title-logo { width: clamp(160px, 50vw, 240px); margin-inline: auto; }
+  .about-lead { text-align: center; margin-inline: auto; }
 
   .footer-main { flex-wrap: wrap; gap: 35px; }
 }
@@ -1476,6 +1493,7 @@ body.is-scroll-motion-ready .reveal {
 
   .about-layout { gap: 55px; }
   .about-copy { order: -1; padding-block: 0; }
+  .about-title-logo { width: clamp(150px, 48vw, 210px); margin-inline: auto; }
   .about-visual { min-height: 280px; padding: 26px; }
   .about-visual p strong { font-size: 1.42rem; }
   .visual-mark { top: -7%; font-size: 19rem; }

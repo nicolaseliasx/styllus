@@ -32,7 +32,13 @@ for (const viewport of mobileViewports) {
 
     const heroLockupBox = await page.locator('.hero-lockup').boundingBox();
     expect(Math.abs((heroLockupBox.x + heroLockupBox.width / 2) - (viewport.width / 2))).toBeLessThanOrEqual(2);
+
+    const heroTitleBox = await page.locator('.hero h1').boundingBox();
+    expect(Math.abs((heroTitleBox.x + heroTitleBox.width / 2) - (viewport.width / 2))).toBeLessThanOrEqual(2);
+
     await expect(page.locator('.about-title-logo')).toBeVisible();
+    const aboutLogoBox = await page.locator('.about-title-logo').boundingBox();
+    expect(Math.abs((aboutLogoBox.x + aboutLogoBox.width / 2) - (viewport.width / 2))).toBeLessThanOrEqual(2);
 
     const menuButtonBox = await page.locator('[data-menu-toggle]').boundingBox();
     expect(menuButtonBox.width).toBeGreaterThanOrEqual(44);
