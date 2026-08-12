@@ -299,41 +299,34 @@ body.is-motion-ready .hero-entry {
   -webkit-animation-delay: var(--intro-delay, 0ms);
   animation: intro-reveal var(--motion-slow) var(--motion-ease) both;
   animation-delay: var(--intro-delay, 0ms);
+  will-change: opacity, transform;
 }
 
 @-webkit-keyframes intro-reveal {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(0, 18px, 0);
-    transform: translate3d(0, 18px, 0);
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
+    -webkit-transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 22px, 0);
   }
 
   to {
     opacity: 1;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
-    -webkit-filter: blur(0);
-    filter: blur(0);
   }
 }
 
 @keyframes intro-reveal {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(0, 18px, 0);
-    transform: translate3d(0, 18px, 0);
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
+    -webkit-transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 22px, 0);
   }
 
   to {
     opacity: 1;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
-    -webkit-filter: blur(0);
-    filter: blur(0);
   }
 }
 
@@ -442,11 +435,9 @@ h2 em {
   text-align: center;
   opacity: 0;
   pointer-events: none;
-  -webkit-filter: blur(3px);
-  filter: blur(3px);
-  -webkit-transform: translate3d(0, 4px, 0) scale(0.992);
-  transform: translate3d(0, 4px, 0) scale(0.992);
-  will-change: opacity, filter, transform;
+  -webkit-transform: translate3d(0, 8px, 0);
+  transform: translate3d(0, 8px, 0);
+  will-change: opacity, transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -454,8 +445,6 @@ h2 em {
 body.is-motion-ready .hero-value {
   transition:
     opacity 900ms ease-in-out,
-    -webkit-filter 900ms ease-in-out,
-    filter 900ms ease-in-out,
     -webkit-transform 900ms ease-in-out,
     transform 900ms ease-in-out;
 }
@@ -463,10 +452,8 @@ body.is-motion-ready .hero-value {
 .hero-value.is-active {
   opacity: 1;
   pointer-events: auto;
-  -webkit-filter: blur(0);
-  filter: blur(0);
-  -webkit-transform: translate3d(0, 0, 0) scale(1);
-  transform: translate3d(0, 0, 0) scale(1);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 .hero-value strong {
@@ -1126,11 +1113,9 @@ body.is-motion-ready .hero-value.is-active strong::before {
 
 body.is-scroll-motion-ready .reveal:not(.is-visible) {
   opacity: 0;
-  -webkit-filter: blur(3px);
-  filter: blur(3px);
-  -webkit-transform: translate3d(0, 18px, 0);
-  transform: translate3d(0, 18px, 0);
-  will-change: opacity, filter, transform;
+  -webkit-transform: translate3d(0, 22px, 0);
+  transform: translate3d(0, 22px, 0);
+  will-change: opacity, transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -1145,16 +1130,12 @@ body.is-scroll-motion-ready .reveal.is-visible {
 @-webkit-keyframes reveal-entry {
   from {
     opacity: 0;
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
-    -webkit-transform: translate3d(0, 18px, 0);
-    transform: translate3d(0, 18px, 0);
+    -webkit-transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 22px, 0);
   }
 
   to {
     opacity: 1;
-    -webkit-filter: blur(0);
-    filter: blur(0);
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
@@ -1163,16 +1144,12 @@ body.is-scroll-motion-ready .reveal.is-visible {
 @keyframes reveal-entry {
   from {
     opacity: 0;
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
-    -webkit-transform: translate3d(0, 18px, 0);
-    transform: translate3d(0, 18px, 0);
+    -webkit-transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 22px, 0);
   }
 
   to {
     opacity: 1;
-    -webkit-filter: blur(0);
-    filter: blur(0);
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }

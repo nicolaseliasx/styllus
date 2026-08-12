@@ -7,7 +7,14 @@ import { getCampaignState } from './campaign.js';
 const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 if (!reducedMotionQuery.matches) {
-  window.requestAnimationFrame(() => document.body.classList.add('is-motion-ready'));
+  // rAF garante que o CSS foi aplicado antes da animação iniciar.
+  // O setTimeout de 50ms é um fallback para Safari iOS que pode atrasar o primeiro rAF.
+  window.requestAnimationFrame(() => {
+    document.body.classList.add('is-motion-ready');
+  });
+  window.setTimeout(() => {
+    document.body.classList.add('is-motion-ready');
+  }, 50);
 }
 
 const WHATSAPP_URL =
@@ -184,6 +191,15 @@ if (reducedMotionQuery.matches) {
 } else {
   document.body.classList.add('is-scroll-motion-ready');
 
+  function revealIfInView(el) {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      el.classList.add('is-visible');
+      return true;
+    }
+    return false;
+  }
+
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -194,9 +210,13 @@ if (reducedMotionQuery.matches) {
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' }
+      { threshold: 0.05, rootMargin: '0px 0px 0px 0px' }
     );
-    revealElements.forEach((el) => revealObserver.observe(el));
+    revealElements.forEach((el) => {
+      if (!revealIfInView(el)) {
+        revealObserver.observe(el);
+      }
+    });
   } else {
     revealElements.forEach((el) => el.classList.add('is-visible'));
   }
