@@ -1000,7 +1000,14 @@ h2 em {
   text-transform: uppercase;
 }
 
-.footer-main > a:last-child {
+.footer-contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.footer-contacts a {
   color: #b6bec8;
   font-size: 0.8rem;
 }
@@ -1482,7 +1489,11 @@ h2 em {
   }
 
   .footer-main > p { flex-wrap: wrap; line-height: 1.8; }
-  .footer-main > a:last-child {
+  .footer-contacts {
+    align-items: flex-start;
+  }
+
+  .footer-contacts a {
     min-height: 44px;
     display: flex;
     align-items: center;
