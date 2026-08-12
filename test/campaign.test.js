@@ -32,6 +32,7 @@ test('o markup prioriza estrutura, suporte e planos em vez de campanha temporal'
   assert.match(markup, /Equipamentos de musculação em dia/);
   assert.match(markup, /Equipe presente/);
   assert.match(markup, /Planos para sua rotina/);
+  assert.match(markup, /Preços imperdíveis/);
   assert.match(markup, /Força <i><\/i> Saúde <i><\/i> Disciplina <i><\/i> Resultados/);
   assert.match(markup, /A Styllus está/);
   assert.doesNotMatch(markup, /final-cta-lockup/);
@@ -54,4 +55,5 @@ test('exibe endereço e mapa acessível na seção Estrutura', async () => {
   assert.match(markup, />\s*Abrir no Google Maps/);
   assert.match(markup, /VENHA CONHECER<br \/><em>A STYLLUS\.<\/em>/);
   assert.match(markup, /src="\/assets\/styllus-mark\.webp"[^>]*alt=""/);
+  assert.doesNotMatch(markup, /class="about-tags"/);
 });

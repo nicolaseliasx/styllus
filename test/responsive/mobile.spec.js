@@ -184,6 +184,7 @@ test('painel de provas do hero exibe os diferenciais concretos', async ({ page }
   await expect(proofs).toContainText('Equipamentos de musculação em dia');
   await expect(proofs).toContainText('Equipe presente');
   await expect(proofs).toContainText('Planos para sua rotina');
+  await expect(proofs).toContainText('Preços imperdíveis');
   await expect(page.locator('[data-value-rotator], [data-value-slide]')).toHaveCount(0);
 });
 
