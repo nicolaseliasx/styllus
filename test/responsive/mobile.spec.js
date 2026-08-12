@@ -36,15 +36,12 @@ for (const viewport of mobileViewports) {
     const heroTitleBox = await page.locator('.hero h1').boundingBox();
     expect(Math.abs((heroTitleBox.x + heroTitleBox.width / 2) - (viewport.width / 2))).toBeLessThanOrEqual(2);
 
-    await expect(page.locator('.about-title-logo')).toBeVisible();
-    const aboutLogoBox = await page.locator('.about-title-logo').boundingBox();
-    expect(Math.abs((aboutLogoBox.x + aboutLogoBox.width / 2) - (viewport.width / 2))).toBeLessThanOrEqual(2);
-
     const menuButtonBox = await page.locator('[data-menu-toggle]').boundingBox();
     expect(menuButtonBox.width).toBeGreaterThanOrEqual(44);
     expect(menuButtonBox.height).toBeGreaterThanOrEqual(44);
-    await expect(page.locator('[data-value-rotator]')).toBeVisible();
-    await expect(page.locator('.hero-values-mark, .hero-values-dots, .hero-value span')).toHaveCount(0);
+    await expect(page.locator('.hero-proofs')).toBeVisible();
+    await expect(page.getByText('Equipamentos Santana Fitness').first()).toBeVisible();
+    await expect(page.locator('[data-value-rotator], [data-value-slide]')).toHaveCount(0);
 
     await page.waitForTimeout(900);
 
@@ -101,15 +98,39 @@ test('tablet e desktop não apresentam rolagem horizontal', async ({ page }) => 
   }
 });
 
-test('desktop usa a marca acessível e somente a navegação reduzida', async ({ page }) => {
+test('seção Estrutura mantém o placeholder antes do conteúdo e exibe o mapa no mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const visual = page.locator('.about-visual');
+  const copy = page.locator('.about-copy');
+  const map = page.locator('.about-map');
+
+  await map.scrollIntoViewIfNeeded();
+  await expect(page.getByText('Nossa localização')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Venha conhecer a Styllus/i })).toBeVisible();
+  await expect(page.getByText('R. Princesa Isabel, 600 — Pte. do Imaruim, Palhoça — SC, 88130-635')).toBeVisible();
+  await expect(page.getByTitle(/Mapa da Styllus Fitness Center/)).toBeVisible();
+  await expect(page.getByRole('link', { name: /Abrir no Google Maps/ })).toBeVisible();
+
+  const [visualBox, copyBox, mapBox] = await Promise.all([
+    visual.boundingBox(),
+    copy.boundingBox(),
+    map.boundingBox(),
+  ]);
+  expect(visualBox.y + visualBox.height).toBeLessThanOrEqual(copyBox.y);
+  expect(mapBox.width).toBeLessThanOrEqual(390 - 32);
+});
+
+test('desktop usa a marca acessível, provas concretas e navegação reduzida', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto('/');
   await expect(page.getByAltText('Emblema da Styllus Fitness Center').first()).toBeVisible();
   await expect(page.getByAltText(/Styllus Fitness Center — força/)).toBeVisible();
   await expect(page.locator('[data-nav] a')).toHaveCount(3);
-  await expect(page.locator('[data-nav]')).not.toContainText('Início');
-  await expect(page.locator('[data-nav]')).not.toContainText('Estrutura');
-  await expect(page.locator('[data-nav]')).not.toContainText('Contato');
+  await expect(page.locator('[data-nav]')).toContainText('Estrutura');
+  await expect(page.locator('[data-nav]')).toContainText('Localização');
+  await expect(page.locator('[data-nav]')).not.toContainText('Reinauguração');
 
   const heroTop = await page.locator('.hero-lockup').evaluate(
     (element) => element.getBoundingClientRect().top,
@@ -117,12 +138,7 @@ test('desktop usa a marca acessível e somente a navegação reduzida', async ({
   expect(heroTop).toBeGreaterThanOrEqual(86);
   expect(heroTop).toBeLessThanOrEqual(126);
 
-  const alignment = await page.evaluate(() => {
-    const heading = document.querySelector('.hero-heading').getBoundingClientRect();
-    const values = document.querySelector('.hero-values').getBoundingClientRect();
-    return Math.abs((heading.top + heading.height / 2) - (values.top + values.height / 2));
-  });
-  expect(alignment).toBeLessThanOrEqual(2);
+  await expect(page.locator('.hero-proofs')).toContainText('Equipamentos Santana Fitness');
 
   const opticalAlignment = await page.evaluate(async () => {
     const logo = document.querySelector('.hero-lockup');
@@ -160,20 +176,16 @@ test('desktop usa a marca acessível e somente a navegação reduzida', async ({
   await page.screenshot({ path: 'test-results/styllus-desktop.png', fullPage: true });
 });
 
-test('módulo de valores exibe somente a palavra centralizada', async ({ page }) => {
+test('painel de provas do hero exibe os diferenciais concretos', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto('/');
 
-  const activeValue = page.locator('[data-value-slide].is-active strong');
-  await expect(activeValue).toHaveText('FORÇA');
-  await expect(page.locator('.hero-values-mark, .hero-values-dots, .hero-value span')).toHaveCount(0);
-
-  const centering = await page.evaluate(() => {
-    const module = document.querySelector('.hero-values').getBoundingClientRect();
-    const word = document.querySelector('[data-value-slide].is-active strong').getBoundingClientRect();
-    return Math.abs((module.left + module.width / 2) - (word.left + word.width / 2));
-  });
-  expect(centering).toBeLessThanOrEqual(2);
+  const proofs = page.locator('.hero-proofs');
+  await expect(proofs).toContainText('Equipamentos Santana Fitness');
+  await expect(proofs).toContainText('Aparelhos em dia');
+  await expect(proofs).toContainText('Equipe presente');
+  await expect(proofs).toContainText('Planos para sua rotina');
+  await expect(page.locator('[data-value-rotator], [data-value-slide]')).toHaveCount(0);
 });
 
 test('CTA final não repete o logo e mantém o conteúdo centralizado', async ({ page }) => {

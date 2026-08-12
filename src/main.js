@@ -2,7 +2,6 @@ import '@fontsource/oswald/latin-500.css';
 import '@fontsource/oswald/latin-600.css';
 import '@fontsource/oswald/latin-700.css';
 import './styles.css';
-import { getCampaignState } from './campaign.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -12,7 +11,7 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 
 // ─── WhatsApp links ───────────────────────────────────────────────────────────
 const WHATSAPP_URL =
-  'https://api.whatsapp.com/send?phone=5548991885129&text=Ol%C3%A1%21+Gostaria+de+conhecer+melhor+a+Academia+Styllus.+Quero+saber+sobre+os+planos%2C+hor%C3%A1rios+e+a+reinaugura%C3%A7%C3%A3o.';
+  'https://api.whatsapp.com/send?phone=5548991885129&text=Ol%C3%A1%21+Gostaria+de+conhecer+melhor+a+Academia+Styllus.+Quero+saber+sobre+os+planos%2C+hor%C3%A1rios+e+a+estrutura.';
 
 document.querySelectorAll('[data-whatsapp]').forEach((link) => {
   link.href = WHATSAPP_URL;
@@ -69,24 +68,6 @@ document.addEventListener('keydown', (event) => {
 window.addEventListener('resize', () => {
   if (window.innerWidth > 960 && nav.classList.contains('is-open')) closeMenu();
 });
-
-// ─── Campaign state ───────────────────────────────────────────────────────────
-function applyCampaignState() {
-  if (getCampaignState() !== 'launched') return;
-  const campaign = document.querySelector('[data-campaign]');
-  campaign.classList.add('is-launched');
-  document.querySelector('[data-campaign-kicker]').textContent = 'A nova fase começou';
-  document.querySelector('[data-campaign-title]').innerHTML = 'A STYLLUS<br><em>ESTÁ DE VOLTA.</em>';
-  document.querySelector('[data-campaign-promo]').textContent = 'Uma nova história já está em movimento.';
-  document.querySelector('[data-campaign-date-wrap]').hidden = true;
-  document.querySelector('[data-campaign-callout]').innerHTML = 'Venha conhecer a nova<br><strong>fase da Styllus!</strong>';
-  document.querySelector('[data-campaign-copy]').textContent = 'Força, saúde, disciplina e resultados para ir ainda mais longe.';
-  document.querySelector('[data-campaign-cta]').childNodes[0].textContent = 'Quero conhecer a Styllus ';
-  document.querySelector('[data-campaign-note]').textContent = 'Fale com nossa equipe e conheça a academia.';
-  document.querySelector('[data-campaign-nav]').textContent = 'Nova fase';
-  document.querySelector('[data-campaign-secondary]').textContent = 'Conhecer a nova fase';
-}
-applyCampaignState();
 
 // ─── WhatsApp floating button ─────────────────────────────────────────────────
 const whatsappFloat = document.querySelector('.whatsapp-float');
@@ -148,62 +129,6 @@ if (!prefersReduced) {
       clearProps: 'all',
     });
   });
-}
-
-// ─── Value rotator ────────────────────────────────────────────────────────────
-const valueRotator = document.querySelector('[data-value-rotator]');
-
-if (valueRotator) {
-  const slides = [...valueRotator.querySelectorAll('[data-value-slide]')];
-  const AUTOPLAY_DELAY = 5000;
-  let activeIndex = 0;
-  let autoplayTimer = null;
-
-  // Set initial state — first slide visible, rest hidden
-  slides.forEach((slide, i) => {
-    slide.classList.toggle('is-active', i === 0);
-    slide.setAttribute('aria-hidden', String(i !== 0));
-    if (i !== 0) gsap.set(slide, { opacity: 0 });
-  });
-
-  function showValue(index) {
-    const prev = slides[activeIndex];
-    activeIndex = (index + slides.length) % slides.length;
-    const next = slides[activeIndex];
-
-    slides.forEach((s, i) => {
-      s.classList.toggle('is-active', i === activeIndex);
-      s.setAttribute('aria-hidden', String(i !== activeIndex));
-    });
-
-    if (prefersReduced) return;
-
-    gsap.to(prev, { opacity: 0, y: 8, duration: 0.45, ease: 'power2.in',
-      onComplete: () => gsap.set(prev, { y: -8 }),
-    });
-    gsap.fromTo(next,
-      { opacity: 0, y: -8 },
-      { opacity: 1, y: 0, duration: 0.6, delay: 0.25, ease: 'power2.out' }
-    );
-  }
-
-  function startAutoplay() {
-    stopAutoplay();
-    if (prefersReduced || document.hidden) return;
-    autoplayTimer = window.setInterval(() => showValue(activeIndex + 1), AUTOPLAY_DELAY);
-  }
-
-  function stopAutoplay() {
-    if (autoplayTimer) { window.clearInterval(autoplayTimer); autoplayTimer = null; }
-  }
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopAutoplay(); else startAutoplay();
-  });
-  window.addEventListener('pageshow', startAutoplay);
-  window.addEventListener('pagehide', stopAutoplay);
-
-  startAutoplay();
 }
 
 // ─── Scroll reveal (GSAP ScrollTrigger) ──────────────────────────────────────

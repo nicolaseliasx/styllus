@@ -3,20 +3,6 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 
-import { getCampaignState } from '../src/campaign.js';
-
-test('mantém a pré-reinauguração antes da meia-noite de 15/08 em Brasília', () => {
-  assert.equal(getCampaignState(new Date('2026-08-15T02:59:59.999Z')), 'prelaunch');
-});
-
-test('ativa a nova fase exatamente à meia-noite de 15/08 em Brasília', () => {
-  assert.equal(getCampaignState(new Date('2026-08-15T03:00:00.000Z')), 'launched');
-});
-
-test('mantém o estado lançado depois da data de corte', () => {
-  assert.equal(getCampaignState(new Date('2027-01-01T00:00:00.000Z')), 'launched');
-});
-
 test('usa os assets oficiais transparentes e preserva os originais', async () => {
   const assets = [
     'assets/1.PNG',
@@ -37,23 +23,35 @@ test('usa os assets oficiais transparentes e preserva os originais', async () =>
   }
 });
 
-test('o markup elimina o halter CSS, usa valores rotativos e reduz a navegação principal', async () => {
+test('o markup prioriza estrutura, suporte e planos em vez de campanha temporal', async () => {
   const markup = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
   assert.match(markup, /styllus-lockup\.webp/);
   assert.match(markup, /styllus-mark-header\.webp/);
-  assert.match(markup, /data-value-rotator/);
-  assert.match(markup, /ELA ESTÁ<br \/><em>DE VOLTA\.<\/em>/);
-  assert.match(markup, /<strong>FORÇA<\/strong>/);
-  assert.match(markup, /<strong>DISCIPLINA<\/strong>/);
+  assert.match(markup, /ESTRUTURA PARA<br \/><em>TREINAR\.<\/em>/);
+  assert.match(markup, /Equipamentos Santana Fitness/);
+  assert.match(markup, /Aparelhos em dia/);
+  assert.match(markup, /Equipe presente/);
+  assert.match(markup, /Planos para sua rotina/);
+  assert.match(markup, /A Styllus está/);
   assert.doesNotMatch(markup, /final-cta-lockup/);
-  assert.doesNotMatch(markup, /Supere seus limites|Constância que transforma|data-value-dot/);
-  assert.doesNotMatch(markup, /hero-silhouette|weight-bar|weight-left|weight-right|hero-manifesto|hero-emblem|hero-grid|hero-values-mark|hero-values-aura/);
-  assert.doesNotMatch(markup, /<p class="eyebrow hero-entry"/);
+  assert.doesNotMatch(markup, /data-value-rotator|data-campaign|campaign\.js/);
+  assert.doesNotMatch(markup, /E a <strong>STYLLUS<\/strong> entra em uma nova fase|O mesmo nome\. A mesma essência|promoção irresistível/);
 
   const nav = markup.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)?.[0] ?? '';
-  assert.match(nav, />A Styllus</);
-  assert.match(nav, />Reinauguração</);
+  assert.match(nav, />Estrutura</);
+  assert.match(nav, />Localização</);
   assert.match(nav, />Falar no WhatsApp</);
-  assert.doesNotMatch(nav, />Início<|>Estrutura<|>Contato</);
+  assert.doesNotMatch(nav, />Reinauguração<|>A Styllus</);
+});
+
+test('exibe endereço e mapa acessível na seção Estrutura', async () => {
+  const markup = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+
+  assert.match(markup, /R\. Princesa Isabel, 600 — Pte\. do Imaruim, Palhoça — SC, 88130-635/);
+  assert.match(markup, /<iframe[\s\S]*title="Mapa da Styllus Fitness Center em R\. Princesa Isabel, 600, Palhoça, SC"/);
+  assert.match(markup, /https:\/\/www\.google\.com\/maps\?q=R\.\+Princesa\+Isabel/);
+  assert.match(markup, />\s*Abrir no Google Maps/);
+  assert.match(markup, /VENHA CONHECER<br \/><em>A STYLLUS\.<\/em>/);
+  assert.match(markup, /src="\/assets\/styllus-mark\.webp"[^>]*alt=""/);
 });

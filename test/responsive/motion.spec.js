@@ -8,7 +8,7 @@ test('redução de movimento mantém o conteúdo imediatamente acessível', asyn
   // Conteúdo deve ser visível sem animação
   await expect(page.locator('.hero-lockup')).toBeVisible();
   await expect(page.locator('h1')).toBeVisible();
-  await expect(page.locator('[data-value-slide].is-active strong')).toHaveText('FORÇA');
+  await expect(page.locator('.hero-proofs')).toBeVisible();
   await expect(page.locator('.story-copy')).toBeVisible();
 });
 
@@ -26,22 +26,9 @@ test.describe('motion padrão', () => {
     await expect(page.locator('.hero-lockup')).toBeVisible();
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.locator('.hero-actions')).toBeVisible();
-    await expect(page.locator('[data-value-slide].is-active strong')).toHaveText('FORÇA');
+    await expect(page.locator('.hero-proofs')).toBeVisible();
 
-    // Rotador: aguardar a troca da palavra (5s)
-    await page.waitForTimeout(5250);
-    await expect(page.locator('[data-value-slide].is-active strong')).toHaveText('SAÚDE');
-
-    // Halo deve estar animando via @keyframes
-    const halo = await page.locator('[data-value-slide].is-active strong').evaluate((el) => {
-      const style = getComputedStyle(el, '::before');
-      return {
-        animationName: style.animationName,
-        backgroundImage: style.backgroundImage,
-      };
-    });
-    expect(halo.animationName).toBe('value-halo-pulse');
-    expect(halo.backgroundImage).toContain('radial-gradient');
+    await expect(page.locator('.hero-proofs')).toContainText('Aparelhos em dia');
 
     // Menu
     await page.locator('[data-menu-toggle]').click();
