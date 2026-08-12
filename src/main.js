@@ -3,20 +3,14 @@ import '@fontsource/oswald/latin-600.css';
 import '@fontsource/oswald/latin-700.css';
 import './styles.css';
 import { getCampaignState } from './campaign.js';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+gsap.registerPlugin(ScrollTrigger);
 
-if (!reducedMotionQuery.matches) {
-  // rAF garante que o CSS foi aplicado antes da animação iniciar.
-  // O setTimeout de 50ms é um fallback para Safari iOS que pode atrasar o primeiro rAF.
-  window.requestAnimationFrame(() => {
-    document.body.classList.add('is-motion-ready');
-  });
-  window.setTimeout(() => {
-    document.body.classList.add('is-motion-ready');
-  }, 50);
-}
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ─── WhatsApp links ───────────────────────────────────────────────────────────
 const WHATSAPP_URL =
   'https://api.whatsapp.com/send?phone=5548991885129&text=Ol%C3%A1%21+Gostaria+de+conhecer+melhor+a+Academia+Styllus.+Quero+saber+sobre+os+planos%2C+hor%C3%A1rios+e+a+reinaugura%C3%A7%C3%A3o.';
 
@@ -26,6 +20,7 @@ document.querySelectorAll('[data-whatsapp]').forEach((link) => {
   link.rel = 'noopener noreferrer';
 });
 
+// ─── Menu ─────────────────────────────────────────────────────────────────────
 const menuToggle = document.querySelector('[data-menu-toggle]');
 const nav = document.querySelector('[data-nav]');
 const navLinks = [...nav.querySelectorAll('a')];
@@ -41,11 +36,9 @@ function closeMenu({ restoreFocus = false } = {}) {
 
 function trapMenuFocus(event) {
   if (event.key !== 'Tab' || !nav.classList.contains('is-open')) return;
-
   const focusable = [menuToggle, ...navLinks];
   const first = focusable[0];
   const last = focusable.at(-1);
-
   if (event.shiftKey && document.activeElement === first) {
     event.preventDefault();
     last.focus();
@@ -57,11 +50,7 @@ function trapMenuFocus(event) {
 
 menuToggle.addEventListener('click', () => {
   const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
-  if (isOpen) {
-    closeMenu();
-    return;
-  }
-
+  if (isOpen) { closeMenu(); return; }
   nav.classList.add('is-open');
   menuToggle.classList.add('is-open');
   menuToggle.setAttribute('aria-expanded', 'true');
@@ -73,9 +62,7 @@ menuToggle.addEventListener('click', () => {
 nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => closeMenu()));
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && nav.classList.contains('is-open')) {
-    closeMenu({ restoreFocus: true });
-  }
+  if (event.key === 'Escape' && nav.classList.contains('is-open')) closeMenu({ restoreFocus: true });
   trapMenuFocus(event);
 });
 
@@ -83,9 +70,9 @@ window.addEventListener('resize', () => {
   if (window.innerWidth > 960 && nav.classList.contains('is-open')) closeMenu();
 });
 
+// ─── Campaign state ───────────────────────────────────────────────────────────
 function applyCampaignState() {
   if (getCampaignState() !== 'launched') return;
-
   const campaign = document.querySelector('[data-campaign]');
   campaign.classList.add('is-launched');
   document.querySelector('[data-campaign-kicker]').textContent = 'A nova fase começou';
@@ -99,9 +86,9 @@ function applyCampaignState() {
   document.querySelector('[data-campaign-nav]').textContent = 'Nova fase';
   document.querySelector('[data-campaign-secondary]').textContent = 'Conhecer a nova fase';
 }
-
 applyCampaignState();
 
+// ─── WhatsApp floating button ─────────────────────────────────────────────────
 const whatsappFloat = document.querySelector('.whatsapp-float');
 const heroCta = document.querySelector('[data-hero-cta]');
 const floatGuards = [...document.querySelectorAll('[data-float-guard]')];
@@ -132,98 +119,112 @@ if ('IntersectionObserver' in window) {
   whatsappFloat.classList.add('is-visible');
 }
 
+// ─── Sticky header ────────────────────────────────────────────────────────────
 const header = document.querySelector('[data-header]');
 const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
 updateHeader();
 window.addEventListener('scroll', updateHeader, { passive: true });
 
+// ─── Hero entry animations (GSAP) ────────────────────────────────────────────
+if (!prefersReduced) {
+  const heroEntries = [
+    { selector: '.hero-lockup',       delay: 0.08 },
+    { selector: '.hero-values-panel', delay: 0.52 },
+    { selector: 'h1',                 delay: 0.36 },
+    { selector: '.hero-lead',         delay: 0.60 },
+    { selector: '.hero-support',      delay: 0.76 },
+    { selector: '.hero-actions',      delay: 0.92 },
+  ];
+
+  heroEntries.forEach(({ selector, delay }) => {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    gsap.from(el, {
+      opacity: 0,
+      y: 22,
+      duration: 1.1,
+      delay,
+      ease: 'power3.out',
+      clearProps: 'all',
+    });
+  });
+}
+
+// ─── Value rotator ────────────────────────────────────────────────────────────
 const valueRotator = document.querySelector('[data-value-rotator]');
 
 if (valueRotator) {
   const slides = [...valueRotator.querySelectorAll('[data-value-slide]')];
   const AUTOPLAY_DELAY = 5000;
   let activeIndex = 0;
-  let autoplayTimer;
+  let autoplayTimer = null;
+
+  // Set initial state — first slide visible, rest hidden
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('is-active', i === 0);
+    slide.setAttribute('aria-hidden', String(i !== 0));
+    if (i !== 0) gsap.set(slide, { opacity: 0 });
+  });
 
   function showValue(index) {
+    const prev = slides[activeIndex];
     activeIndex = (index + slides.length) % slides.length;
-    slides.forEach((slide, slideIndex) => {
-      const isActive = slideIndex === activeIndex;
-      slide.classList.toggle('is-active', isActive);
-      slide.setAttribute('aria-hidden', String(!isActive));
+    const next = slides[activeIndex];
+
+    slides.forEach((s, i) => {
+      s.classList.toggle('is-active', i === activeIndex);
+      s.setAttribute('aria-hidden', String(i !== activeIndex));
     });
+
+    if (prefersReduced) return;
+
+    gsap.to(prev, { opacity: 0, y: 8, duration: 0.45, ease: 'power2.in',
+      onComplete: () => gsap.set(prev, { y: -8 }),
+    });
+    gsap.fromTo(next,
+      { opacity: 0, y: -8 },
+      { opacity: 1, y: 0, duration: 0.6, delay: 0.25, ease: 'power2.out' }
+    );
   }
 
   function startAutoplay() {
     stopAutoplay();
-    if (reducedMotionQuery.matches || document.hidden) return;
-    autoplayTimer = window.setInterval(() => {
-      showValue(activeIndex + 1);
-    }, AUTOPLAY_DELAY);
+    if (prefersReduced || document.hidden) return;
+    autoplayTimer = window.setInterval(() => showValue(activeIndex + 1), AUTOPLAY_DELAY);
   }
 
   function stopAutoplay() {
-    if (autoplayTimer) {
-      window.clearInterval(autoplayTimer);
-      autoplayTimer = null;
-    }
+    if (autoplayTimer) { window.clearInterval(autoplayTimer); autoplayTimer = null; }
   }
 
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopAutoplay();
-    else startAutoplay();
+    if (document.hidden) stopAutoplay(); else startAutoplay();
   });
   window.addEventListener('pageshow', startAutoplay);
   window.addEventListener('pagehide', stopAutoplay);
-  reducedMotionQuery.addEventListener?.('change', () => {
-    if (reducedMotionQuery.matches) showValue(0);
-    startAutoplay();
-  });
 
-  showValue(0);
   startAutoplay();
 }
 
-const revealElements = [...document.querySelectorAll('.reveal')];
+// ─── Scroll reveal (GSAP ScrollTrigger) ──────────────────────────────────────
+document.querySelectorAll('.reveal').forEach((el) => {
+  const rawDelay = el.style.getPropertyValue('--reveal-delay');
+  const revealDelay = rawDelay ? parseFloat(rawDelay) / 1000 : 0;
 
-if (reducedMotionQuery.matches) {
-  revealElements.forEach((el) => el.classList.add('is-visible'));
-} else {
-  document.body.classList.add('is-scroll-motion-ready');
+  if (prefersReduced) return; // elements already visible by default in CSS
 
-  function revealIfInView(el) {
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.92) {
-      el.classList.add('is-visible');
-      return true;
-    }
-    return false;
-  }
-
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.05, rootMargin: '0px 0px 0px 0px' }
-    );
-    revealElements.forEach((el) => {
-      if (!revealIfInView(el)) {
-        revealObserver.observe(el);
-      }
-    });
-  } else {
-    revealElements.forEach((el) => el.classList.add('is-visible'));
-  }
-}
-
-reducedMotionQuery.addEventListener?.('change', () => {
-  if (reducedMotionQuery.matches) {
-    revealElements.forEach((el) => el.classList.add('is-visible'));
-  }
+  gsap.from(el, {
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 92%',
+      toggleActions: 'play none none none',
+      once: true,
+    },
+    opacity: 0,
+    y: 22,
+    duration: 0.85,
+    delay: revealDelay,
+    ease: 'power2.out',
+    clearProps: 'all',
+  });
 });

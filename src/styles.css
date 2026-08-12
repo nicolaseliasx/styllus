@@ -294,41 +294,6 @@ a {
   filter: drop-shadow(0 8px 13px rgba(0, 0, 0, 0.38)) drop-shadow(0 0 12px rgba(0, 117, 255, 0.12));
 }
 
-body.is-motion-ready .hero-entry {
-  -webkit-animation: intro-reveal var(--motion-slow) var(--motion-ease) both;
-  -webkit-animation-delay: var(--intro-delay, 0ms);
-  animation: intro-reveal var(--motion-slow) var(--motion-ease) both;
-  animation-delay: var(--intro-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-@-webkit-keyframes intro-reveal {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 22px, 0);
-    transform: translate3d(0, 22px, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes intro-reveal {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 22px, 0);
-    transform: translate3d(0, 22px, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
 
 .hero h1,
 .campaign h2,
@@ -433,27 +398,12 @@ h2 em {
   width: 100%;
   min-width: 0;
   text-align: center;
-  opacity: 0;
+  /* GSAP controla opacity — estado inicial definido em main.js */
   pointer-events: none;
-  -webkit-transform: translate3d(0, 8px, 0);
-  transform: translate3d(0, 8px, 0);
-  will-change: opacity, transform;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-body.is-motion-ready .hero-value {
-  transition:
-    opacity 900ms ease-in-out,
-    -webkit-transform 900ms ease-in-out,
-    transform 900ms ease-in-out;
 }
 
 .hero-value.is-active {
-  opacity: 1;
   pointer-events: auto;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
 }
 
 .hero-value strong {
@@ -489,9 +439,11 @@ body.is-motion-ready .hero-value {
   will-change: transform, opacity;
 }
 
-body.is-motion-ready .hero-value.is-active strong::before {
-  -webkit-animation: value-halo-pulse 4.5s ease-in-out infinite;
-  animation: value-halo-pulse 4.5s ease-in-out infinite;
+@media (prefers-reduced-motion: no-preference) {
+  .hero-value.is-active strong::before {
+    -webkit-animation: value-halo-pulse 4.5s ease-in-out infinite;
+    animation: value-halo-pulse 4.5s ease-in-out infinite;
+  }
 }
 
 @-webkit-keyframes value-halo-pulse {
@@ -1103,56 +1055,10 @@ body.is-motion-ready .hero-value.is-active strong::before {
   fill: currentColor;
 }
 
+/* .reveal: GSAP ScrollTrigger controla opacity e transform via inline style.
+   Sem classes is-scroll-motion-ready ou is-visible necessárias. */
 .reveal {
-  opacity: 1;
-  -webkit-filter: none;
-  filter: none;
-  -webkit-transform: none;
-  transform: none;
-}
-
-body.is-scroll-motion-ready .reveal:not(.is-visible) {
-  opacity: 0;
-  -webkit-transform: translate3d(0, 22px, 0);
-  transform: translate3d(0, 22px, 0);
-  will-change: opacity, transform;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-body.is-scroll-motion-ready .reveal.is-visible {
-  -webkit-animation: reveal-entry 900ms var(--motion-ease) both;
-  animation: reveal-entry 900ms var(--motion-ease) both;
-  -webkit-animation-delay: var(--reveal-delay, 0ms);
-  animation-delay: var(--reveal-delay, 0ms);
-}
-
-@-webkit-keyframes reveal-entry {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 22px, 0);
-    transform: translate3d(0, 22px, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes reveal-entry {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 22px, 0);
-    transform: translate3d(0, 22px, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
+  /* visível por padrão — GSAP inicia do estado escondido via gsap.from() */
 }
 
 @media (max-width: 960px) {
