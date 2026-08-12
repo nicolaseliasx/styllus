@@ -26,6 +26,7 @@ test('usa os assets oficiais transparentes e preserva os originais', async () =>
 test('o markup prioriza estrutura, suporte e planos em vez de campanha temporal', async () => {
   const markup = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
+  assert.match(markup, /maximum-scale=1\.0, user-scalable=no/);
   assert.match(markup, /styllus-lockup\.webp/);
   assert.match(markup, /styllus-mark-header\.webp/);
   assert.match(markup, /ELA ESTÁ<br \/><em>DE VOLTA\.<\/em>/);
