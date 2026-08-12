@@ -892,6 +892,19 @@ body.is-motion-ready .hero-value.is-pulsing strong::before {
   padding-block: 30px;
 }
 
+.about-title-wrap {
+  margin: 12px 0 20px;
+}
+
+.about-title-logo {
+  display: block;
+  width: clamp(260px, 80%, 420px);
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgba(0, 117, 255, 0.15));
+}
+
 .about-lead {
   margin: 32px 0;
   font-size: 1.05rem;
@@ -1198,7 +1211,7 @@ body.is-scroll-motion-ready .reveal {
   .hero-lockup {
     width: 300px;
     margin-inline: auto;
-    translate: -12% 0;
+    translate: none;
   }
 
   .hero-heading,
@@ -1216,7 +1229,7 @@ body.is-scroll-motion-ready .reveal {
     margin-top: 42px;
     align-self: auto;
     justify-self: center;
-    transform: translateX(3%);
+    transform: none;
   }
 
   .hero-values-panel {
@@ -1333,7 +1346,7 @@ body.is-scroll-motion-ready .reveal {
   .hero-lockup {
     width: 190px;
     margin: 0 auto 5px;
-    translate: -8% 0;
+    translate: none;
   }
 
   .hero h1 { font-size: clamp(3.9rem, 19vw, 5.1rem); }
@@ -1400,6 +1413,12 @@ body.is-scroll-motion-ready .reveal {
   .hero-value strong {
     font-size: clamp(3.35rem, 15.5vw, 4.6rem);
     letter-spacing: 0.045em;
+  }
+
+  .hero-value strong::before {
+    width: min(320px, 90vw);
+    height: 160px;
+    opacity: 0.45;
   }
 
   .scroll-cue { display: none; }
