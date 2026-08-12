@@ -361,13 +361,13 @@ h2 em {
   grid-area: values;
   align-self: center;
   justify-self: center;
-  width: min(100%, 500px);
+  width: min(100%, 560px);
   transform: translateX(clamp(24px, 3.4vw, 52px));
 }
 
 .hero-proofs .hero-values-panel {
   min-height: 0;
-  padding: 30px 34px;
+  padding: 36px 42px;
   border: 1px solid rgba(57, 162, 255, 0.34);
   background: linear-gradient(135deg, rgba(0, 102, 218, 0.13), rgba(7, 12, 20, 0.72));
   box-shadow: 14px 14px 0 rgba(0, 91, 219, 0.08);
@@ -377,7 +377,7 @@ h2 em {
   margin: 0 0 18px;
   color: var(--blue-light);
   font-family: var(--font-display);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -386,7 +386,7 @@ h2 em {
 .hero-proofs ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 13px 22px;
+  gap: 18px 28px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -396,7 +396,7 @@ h2 em {
   position: relative;
   padding-left: 14px;
   color: #dce3ed;
-  font-size: 0.84rem;
+  font-size: 0.98rem;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -1552,13 +1552,16 @@ h2 em {
 
   .hero-proofs .hero-values-panel {
     min-height: 0;
-    padding: 22px;
+    padding: 28px;
   }
 
   .hero-proofs ul {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 13px;
   }
+
+  .hero-proofs p { font-size: 0.85rem; }
+  .hero-proofs li { font-size: 0.93rem; }
 
   .hero-values-copy {
     min-height: 96px;

@@ -28,7 +28,7 @@ test.describe('motion padrão', () => {
     await expect(page.locator('.hero-actions')).toBeVisible();
     await expect(page.locator('.hero-proofs')).toBeVisible();
 
-    await expect(page.locator('.hero-proofs')).toContainText('Aparelhos em dia');
+    await expect(page.locator('.hero-proofs')).toContainText('Equipamentos de musculação em dia');
 
     // Menu
     await page.locator('[data-menu-toggle]').click();

@@ -40,7 +40,7 @@ for (const viewport of mobileViewports) {
     expect(menuButtonBox.width).toBeGreaterThanOrEqual(44);
     expect(menuButtonBox.height).toBeGreaterThanOrEqual(44);
     await expect(page.locator('.hero-proofs')).toBeVisible();
-    await expect(page.getByText('Equipamentos Santana Fitness').first()).toBeVisible();
+    await expect(page.getByText('Equipamentos de musculação em dia').first()).toBeVisible();
     await expect(page.locator('[data-value-rotator], [data-value-slide]')).toHaveCount(0);
 
     await page.waitForTimeout(900);
@@ -138,7 +138,7 @@ test('desktop usa a marca acessível, provas concretas e navegação reduzida', 
   expect(heroTop).toBeGreaterThanOrEqual(86);
   expect(heroTop).toBeLessThanOrEqual(126);
 
-  await expect(page.locator('.hero-proofs')).toContainText('Equipamentos Santana Fitness');
+  await expect(page.locator('.hero-proofs')).toContainText('Equipamentos de musculação em dia');
 
   const opticalAlignment = await page.evaluate(async () => {
     const logo = document.querySelector('.hero-lockup');
@@ -181,8 +181,7 @@ test('painel de provas do hero exibe os diferenciais concretos', async ({ page }
   await page.goto('/');
 
   const proofs = page.locator('.hero-proofs');
-  await expect(proofs).toContainText('Equipamentos Santana Fitness');
-  await expect(proofs).toContainText('Aparelhos em dia');
+  await expect(proofs).toContainText('Equipamentos de musculação em dia');
   await expect(proofs).toContainText('Equipe presente');
   await expect(proofs).toContainText('Planos para sua rotina');
   await expect(page.locator('[data-value-rotator], [data-value-slide]')).toHaveCount(0);

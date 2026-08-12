@@ -28,11 +28,11 @@ test('o markup prioriza estrutura, suporte e planos em vez de campanha temporal'
 
   assert.match(markup, /styllus-lockup\.webp/);
   assert.match(markup, /styllus-mark-header\.webp/);
-  assert.match(markup, /ESTRUTURA PARA<br \/><em>TREINAR\.<\/em>/);
-  assert.match(markup, /Equipamentos Santana Fitness/);
-  assert.match(markup, /Aparelhos em dia/);
+  assert.match(markup, /ELA ESTÁ<br \/><em>DE VOLTA\.<\/em>/);
+  assert.match(markup, /Equipamentos de musculação em dia/);
   assert.match(markup, /Equipe presente/);
   assert.match(markup, /Planos para sua rotina/);
+  assert.match(markup, /Força <i><\/i> Saúde <i><\/i> Disciplina <i><\/i> Resultados/);
   assert.match(markup, /A Styllus está/);
   assert.doesNotMatch(markup, /final-cta-lockup/);
   assert.doesNotMatch(markup, /data-value-rotator|data-campaign|campaign\.js/);
