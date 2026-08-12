@@ -28,6 +28,8 @@ for (const viewport of mobileViewports) {
     expect(menuButtonBox.width).toBeGreaterThanOrEqual(44);
     expect(menuButtonBox.height).toBeGreaterThanOrEqual(44);
 
+    await page.waitForTimeout(900);
+
     await page.screenshot({
       path: `test-results/styllus-${viewport.name}.png`,
       fullPage: true,
@@ -79,4 +81,18 @@ test('tablet e desktop não apresentam rolagem horizontal', async ({ page }) => 
     );
     expect(hasOverflow).toBe(false);
   }
+});
+
+test('desktop usa a marca acessível e somente a navegação reduzida', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/');
+  await expect(page.getByAltText('Emblema da Styllus Fitness Center').first()).toBeVisible();
+  await expect(page.getByAltText(/Styllus Fitness Center — força/)).toBeVisible();
+  await expect(page.locator('[data-nav] a')).toHaveCount(3);
+  await expect(page.locator('[data-nav]')).not.toContainText('Início');
+  await expect(page.locator('[data-nav]')).not.toContainText('Estrutura');
+  await expect(page.locator('[data-nav]')).not.toContainText('Contato');
+
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: 'test-results/styllus-desktop.png', fullPage: true });
 });

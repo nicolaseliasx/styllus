@@ -18,7 +18,7 @@ test.describe('motion padrão', () => {
     await page.goto('/');
 
     await expect(page.locator('body')).toHaveClass(/is-motion-ready/);
-    await expect(page.locator('.hero-brand')).toHaveCSS('animation-name', 'intro-reveal-skewed');
+    await expect(page.locator('.hero-lockup')).toHaveCSS('animation-name', 'intro-reveal');
 
     await page.locator('[data-menu-toggle]').click();
     await expect(page.locator('[data-nav]')).toHaveClass(/is-open/);
