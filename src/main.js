@@ -175,6 +175,7 @@ if (valueRotator) {
   }
 
   document.addEventListener('visibilitychange', scheduleAutoplay);
+  window.addEventListener('pageshow', scheduleAutoplay);
   reducedMotionQuery.addEventListener?.('change', () => {
     if (reducedMotionQuery.matches) showValue(0);
     scheduleAutoplay();
@@ -200,7 +201,7 @@ function updateRevealProgress() {
     return;
   }
 
-  const viewportHeight = window.innerHeight;
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
   const revealStart = viewportHeight * 0.95;
   const revealEnd = viewportHeight * 0.72;
   const revealRange = revealStart - revealEnd;
@@ -230,4 +231,18 @@ function requestRevealUpdate() {
 updateRevealProgress();
 window.addEventListener('scroll', requestRevealUpdate, { passive: true });
 window.addEventListener('resize', requestRevealUpdate);
+window.addEventListener('orientationchange', requestRevealUpdate);
+window.addEventListener('pageshow', requestRevealUpdate);
 reducedMotionQuery.addEventListener?.('change', requestRevealUpdate);
+
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        requestRevealUpdate();
+      }
+    });
+  }, { threshold: 0.1 });
+
+  revealElements.forEach((el) => revealObserver.observe(el));
+}
