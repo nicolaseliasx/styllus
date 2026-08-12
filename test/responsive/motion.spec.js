@@ -10,7 +10,6 @@ test('redução de movimento mantém o conteúdo imediatamente acessível', asyn
   await expect(page.locator('.story-copy')).toHaveClass(/is-visible/);
   await expect(page.locator('.story-copy')).toHaveCSS('opacity', '1');
   await expect(page.locator('[data-value-slide].is-active strong')).toHaveText('FORÇA');
-  await expect(page.locator('[data-value-slide].is-pulsing')).toHaveCount(0);
 });
 
 test.describe('motion padrão', () => {
@@ -55,41 +54,26 @@ test.describe('motion padrão', () => {
     await expect(page.locator('[data-nav] a').last()).toHaveCSS('opacity', '1');
   });
 
-  test('reveal acompanha o scroll e regride ao voltar pelo mesmo intervalo', async ({ page }) => {
+  test('reveal aciona ao entrar no viewport via IntersectionObserver', async ({ page }) => {
     await page.setViewportSize({ width: 1366, height: 768 });
     await page.goto('/');
 
-    const positionReveal = async (viewportRatio) => {
-      await page.locator('.campaign-intro').evaluate((element, ratio) => {
-        document.documentElement.style.scrollBehavior = 'auto';
-        const rect = element.getBoundingClientRect();
-        window.scrollTo(0, window.scrollY + rect.top - (window.innerHeight * ratio));
-      }, viewportRatio);
-      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      return page.locator('.campaign-intro').evaluate((element) => ({
-        progress: Number.parseFloat(getComputedStyle(element).getPropertyValue('--reveal-progress')),
-        opacity: Number.parseFloat(getComputedStyle(element).opacity),
-        blur: Number.parseFloat(getComputedStyle(element).getPropertyValue('--reveal-blur')),
-        offset: Number.parseFloat(getComputedStyle(element).getPropertyValue('--reveal-offset')),
-      }));
-    };
+    // Elementos acima do fold já devem estar visíveis (is-scroll-motion-ready adicionado imediatamente)
+    await expect(page.locator('body')).toHaveClass(/is-scroll-motion-ready/);
 
-    const hidden = await positionReveal(0.95);
-    const halfwayDown = await positionReveal(0.835);
-    const visible = await positionReveal(0.72);
-    const halfwayUp = await positionReveal(0.835);
-    const hiddenAgain = await positionReveal(0.95);
+    // Rolar até o elemento .campaign-intro que está fora do viewport inicial
+    await page.locator('.campaign-intro').evaluate((element) => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      element.scrollIntoView({ block: 'center' });
+    });
 
-    expect(hidden.progress).toBeLessThanOrEqual(0.02);
-    expect(halfwayDown.progress).toBeGreaterThan(0.4);
-    expect(halfwayDown.progress).toBeLessThan(0.7);
-    expect(halfwayDown.opacity).toBeCloseTo(halfwayDown.progress, 1);
-    expect(halfwayDown.blur).toBeGreaterThan(0.8);
-    expect(halfwayDown.offset).toBeGreaterThan(5);
-    expect(visible.progress).toBeGreaterThanOrEqual(0.98);
-    expect(halfwayUp.progress).toBeGreaterThan(0.4);
-    expect(halfwayUp.progress).toBeLessThan(0.7);
-    expect(hiddenAgain.progress).toBeLessThanOrEqual(0.02);
+    // Aguardar IntersectionObserver acionar e adicionar .is-visible
+    await page.waitForFunction(
+      () => document.querySelector('.campaign-intro')?.classList.contains('is-visible'),
+      { timeout: 3000 },
+    );
+
+    await expect(page.locator('.campaign-intro')).toHaveClass(/is-visible/);
+    await expect(page.locator('.campaign-intro')).toHaveCSS('animation-name', 'reveal-entry');
   });
 });

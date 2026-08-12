@@ -178,78 +178,32 @@ if (valueRotator) {
 }
 
 const revealElements = [...document.querySelectorAll('.reveal')];
-let revealFrame = 0;
 
-const clamp = (value, minimum = 0, maximum = 1) => (
-  Math.min(maximum, Math.max(minimum, value))
-);
-
-function updateRevealProgress() {
-  revealFrame = 0;
-
-  if (reducedMotionQuery.matches) {
-    document.body.classList.remove('is-scroll-motion-ready');
-    revealElements.forEach((element) => {
-      element.style.opacity = '1';
-      element.style.filter = 'none';
-      element.style.webkitFilter = 'none';
-      element.style.transform = 'none';
-      element.style.webkitTransform = 'none';
-      element.classList.add('is-visible');
-    });
-    return;
-  }
-
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-  const revealStart = viewportHeight * 0.95;
-  const revealEnd = viewportHeight * 0.72;
-  const revealRange = revealStart - revealEnd;
-
-  revealElements.forEach((element) => {
-    const delay = Number.parseInt(element.style.getPropertyValue('--reveal-delay'), 10) || 0;
-    const stagger = clamp(delay / 700, 0, 0.25);
-    const baseProgress = clamp((revealStart - element.getBoundingClientRect().top) / revealRange);
-    const rawProgress = clamp((baseProgress - stagger) / (1 - stagger));
-    const progress = rawProgress * rawProgress * (3 - (2 * rawProgress));
-    const opacity = clamp(progress * 1.05);
-    const offset = (1 - progress) * 20;
-    const blur = (1 - progress) * 2.8;
-
-    element.style.setProperty('--reveal-progress', opacity.toFixed(4));
-    element.style.setProperty('--reveal-offset', `${offset.toFixed(2)}px`);
-    element.style.setProperty('--reveal-blur', `${blur.toFixed(2)}px`);
-    element.style.opacity = opacity.toFixed(4);
-    element.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
-    element.style.webkitTransform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
-    element.style.filter = `blur(${blur.toFixed(2)}px)`;
-    element.style.webkitFilter = `blur(${blur.toFixed(2)}px)`;
-
-    element.classList.toggle('is-visible', progress >= 0.999);
-  });
-
+if (reducedMotionQuery.matches) {
+  revealElements.forEach((el) => el.classList.add('is-visible'));
+} else {
   document.body.classList.add('is-scroll-motion-ready');
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' }
+    );
+    revealElements.forEach((el) => revealObserver.observe(el));
+  } else {
+    revealElements.forEach((el) => el.classList.add('is-visible'));
+  }
 }
 
-function requestRevealUpdate() {
-  if (revealFrame) return;
-  revealFrame = window.requestAnimationFrame(updateRevealProgress);
-}
-
-updateRevealProgress();
-window.addEventListener('scroll', requestRevealUpdate, { passive: true });
-window.addEventListener('resize', requestRevealUpdate);
-window.addEventListener('orientationchange', requestRevealUpdate);
-window.addEventListener('pageshow', requestRevealUpdate);
-reducedMotionQuery.addEventListener?.('change', requestRevealUpdate);
-
-if ('IntersectionObserver' in window) {
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        requestRevealUpdate();
-      }
-    });
-  }, { threshold: 0.1 });
-
-  revealElements.forEach((el) => revealObserver.observe(el));
-}
+reducedMotionQuery.addEventListener?.('change', () => {
+  if (reducedMotionQuery.matches) {
+    revealElements.forEach((el) => el.classList.add('is-visible'));
+  }
+});
