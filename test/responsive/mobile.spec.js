@@ -66,7 +66,7 @@ test('menu móvel gerencia foco, Escape e restauração do botão', async ({ pag
   await expect(toggle).toBeFocused();
 });
 
-test('WhatsApp flutuante aparece após o hero e não cobre CTAs equivalentes', async ({ page }) => {
+test('WhatsApp flutuante aparece após o hero e se oculta somente sobre o mapa', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
@@ -77,10 +77,13 @@ test('WhatsApp flutuante aparece após o hero e não cobre CTAs equivalentes', a
   await expect(floatingButton).toHaveClass(/is-visible/);
 
   await page.locator('.principles').scrollIntoViewIfNeeded();
+  await expect(floatingButton).toHaveClass(/is-visible/);
+
+  await page.locator('.about-map').scrollIntoViewIfNeeded();
   await expect(floatingButton).not.toHaveClass(/is-visible/);
 
-  await page.locator('#contato [data-float-guard]').scrollIntoViewIfNeeded();
-  await expect(floatingButton).not.toHaveClass(/is-visible/);
+  await page.locator('.site-footer').scrollIntoViewIfNeeded();
+  await expect(floatingButton).toHaveClass(/is-visible/);
 });
 
 test('tablet e desktop não apresentam rolagem horizontal', async ({ page }) => {

@@ -29,6 +29,7 @@ test('o markup prioriza estrutura, suporte e planos em vez de campanha temporal'
   assert.match(markup, /maximum-scale=1\.0, user-scalable=no/);
   assert.match(markup, /styllus-lockup\.webp/);
   assert.match(markup, /styllus-mark-header\.webp/);
+  assert.match(markup, /rel="icon" type="image\/webp" href="\/assets\/styllus-mark-header\.webp"/);
   assert.match(markup, /ELA ESTÁ<br \/><em>DE VOLTA\.<\/em>/);
   assert.match(markup, /Equipamentos de musculação em dia/);
   assert.match(markup, /Equipe presente/);
