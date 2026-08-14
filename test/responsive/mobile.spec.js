@@ -101,7 +101,7 @@ test('tablet e desktop não apresentam rolagem horizontal', async ({ page }) => 
   }
 });
 
-test('seção Estrutura mantém o placeholder antes do conteúdo e exibe o mapa no mobile', async ({ page }) => {
+test('seção Estrutura mostra fotos reais antes do conteúdo e exibe o mapa no mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
@@ -115,14 +115,47 @@ test('seção Estrutura mantém o placeholder antes do conteúdo e exibe o mapa 
   await expect(page.getByText('R. Princesa Isabel, 600 — Pte. do Imaruim, Palhoça — SC, 88130-635')).toBeVisible();
   await expect(page.getByTitle(/Mapa da Styllus Fitness Center/)).toBeVisible();
   await expect(page.getByRole('link', { name: /Abrir no Google Maps/ })).toBeVisible();
+  await expect(visual.locator('[data-overview-gallery]')).toBeVisible();
+  await expect(visual.locator('img.is-active')).toHaveAttribute('src', /overview-01\.webp/);
 
   const [visualBox, copyBox, mapBox] = await Promise.all([
     visual.boundingBox(),
     copy.boundingBox(),
     map.boundingBox(),
   ]);
-  expect(visualBox.y + visualBox.height).toBeLessThanOrEqual(copyBox.y);
+  expect(copyBox.y + copyBox.height).toBeLessThanOrEqual(visualBox.y);
   expect(mapBox.width).toBeLessThanOrEqual(390 - 32);
+});
+
+test('galerias da estrutura usam as fotos do overview no hero e ao lado do mapa', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/');
+
+  const galleries = page.locator('[data-overview-gallery]');
+  await expect(galleries).toHaveCount(2);
+  await expect(galleries.nth(0).locator('img')).toHaveCount(5);
+  await expect(galleries.nth(1).locator('img')).toHaveCount(5);
+  await expect(galleries.nth(0).locator('img.is-active')).toHaveCount(1);
+  await expect(galleries.nth(1).locator('img.is-active')).toHaveCount(1);
+});
+
+test('foto ativa da galeria abre ampliada ao clicar', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.goto('/');
+
+  await page.locator('.hero-gallery .overview-gallery-open').click();
+  const lightbox = page.locator('[data-gallery-lightbox]');
+  await expect(lightbox).toBeVisible();
+  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-01\.webp/);
+
+  await lightbox.locator('[data-gallery-next]').click();
+  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-02\.webp/);
+
+  await lightbox.locator('[data-gallery-previous]').click();
+  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-01\.webp/);
+
+  await lightbox.locator('.gallery-lightbox-close').click();
+  await expect(lightbox).not.toBeVisible();
 });
 
 test('desktop usa a marca acessível, provas concretas e navegação reduzida', async ({ page }) => {

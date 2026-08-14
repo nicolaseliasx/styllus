@@ -59,3 +59,14 @@ test('exibe endereço e mapa acessível na seção Estrutura', async () => {
   assert.match(markup, /src="\/assets\/styllus-mark\.webp"[^>]*alt=""/);
   assert.doesNotMatch(markup, /class="about-tags"/);
 });
+
+test('converte as fotos do overview para formatos web compatíveis', async () => {
+  const photos = [
+    'assets/overview/web/overview-01.webp',
+    'assets/overview/web/overview-02.webp',
+    'assets/overview/web/overview-03.webp',
+    'assets/overview/web/overview-04.webp',
+    'assets/overview/web/overview-05.webp',
+  ];
+  await Promise.all(photos.map((photo) => stat(new URL(`../${photo}`, import.meta.url))));
+});

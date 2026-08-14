@@ -111,6 +111,7 @@ if (!prefersReduced) {
   const heroEntries = [
     { selector: '.hero-lockup',       delay: 0.08 },
     { selector: '.hero-values-panel', delay: 0.52 },
+    { selector: '.hero-gallery',      delay: 0.68 },
     { selector: 'h1',                 delay: 0.36 },
     { selector: '.hero-lead',         delay: 0.60 },
     { selector: '.hero-support',      delay: 0.76 },
@@ -130,6 +131,73 @@ if (!prefersReduced) {
     });
   });
 }
+
+// ─── Overview galleries ──────────────────────────────────────────────────────
+// Cada galeria alterna suas próprias fotos, para que as duas áreas não pareçam
+// uma cópia estática da outra. O tempo de troca pode ser ajustado aqui.
+const GALLERY_INTERVAL = 5500;
+const galleryLightbox = document.querySelector('[data-gallery-lightbox]');
+const galleryLightboxImage = galleryLightbox?.querySelector('img');
+const galleryStates = new Map();
+let expandedGallery = null;
+
+function activateGalleryPhoto(gallery, nextIndex) {
+  const state = galleryStates.get(gallery);
+  if (!state) return;
+
+  state.photos[state.activeIndex].classList.remove('is-active');
+  state.activeIndex = (nextIndex + state.photos.length) % state.photos.length;
+  state.photos[state.activeIndex].classList.add('is-active');
+}
+
+function updateExpandedPhoto(step) {
+  if (!expandedGallery || !galleryLightboxImage) return;
+  const state = galleryStates.get(expandedGallery);
+  if (!state) return;
+
+  activateGalleryPhoto(expandedGallery, state.activeIndex + step);
+  galleryLightboxImage.src = state.photos[state.activeIndex].currentSrc || state.photos[state.activeIndex].src;
+}
+
+galleryLightbox?.querySelector('.gallery-lightbox-close').addEventListener('click', () => {
+  galleryLightbox.close();
+});
+
+galleryLightbox?.querySelector('[data-gallery-previous]').addEventListener('click', () => updateExpandedPhoto(-1));
+galleryLightbox?.querySelector('[data-gallery-next]').addEventListener('click', () => updateExpandedPhoto(1));
+
+galleryLightbox?.addEventListener('close', () => { expandedGallery = null; });
+galleryLightbox?.addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowLeft') updateExpandedPhoto(-1);
+  if (event.key === 'ArrowRight') updateExpandedPhoto(1);
+});
+
+document.querySelectorAll('[data-overview-gallery]').forEach((gallery, galleryIndex) => {
+  const photos = [...gallery.querySelectorAll('img')];
+  if (photos.length < 2) return;
+  const activeIndex = Math.max(0, photos.findIndex((photo) => photo.classList.contains('is-active')));
+  galleryStates.set(gallery, { photos, activeIndex });
+
+  if (!prefersReduced) {
+    window.setTimeout(() => {
+      window.setInterval(() => {
+        const state = galleryStates.get(gallery);
+        activateGalleryPhoto(gallery, state.activeIndex + 1);
+      }, GALLERY_INTERVAL);
+    }, galleryIndex * 1100);
+  }
+});
+
+document.querySelectorAll('[data-overview-gallery]').forEach((gallery) => {
+  const openButton = gallery.querySelector('.overview-gallery-open');
+  openButton?.addEventListener('click', () => {
+    const activePhoto = gallery.querySelector('img.is-active');
+    if (!galleryLightbox || !galleryLightboxImage || !activePhoto) return;
+    expandedGallery = gallery;
+    galleryLightboxImage.src = activePhoto.currentSrc || activePhoto.src;
+    galleryLightbox.showModal();
+  });
+});
 
 // ─── Scroll reveal (GSAP ScrollTrigger) ──────────────────────────────────────
 document.querySelectorAll('.reveal').forEach((el) => {

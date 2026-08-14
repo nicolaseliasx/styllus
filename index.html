@@ -69,17 +69,31 @@
             </div>
           </div>
 
-          <aside class="hero-proofs" aria-label="Diferenciais da Styllus">
-            <div class="hero-values-panel hero-entry" style="--intro-delay: 520ms">
-              <p>O que você encontra</p>
-              <ul>
-                <li>Equipamentos de musculação em dia</li>
-                <li>Equipe presente</li>
-                <li>Planos para sua rotina</li>
-                <li>Preços imperdíveis</li>
-              </ul>
+          <div class="hero-media">
+            <aside class="hero-proofs" aria-label="Diferenciais da Styllus">
+              <div class="hero-values-panel hero-entry" style="--intro-delay: 520ms">
+                <p>O que você encontra</p>
+                <ul>
+                  <li>Equipamentos de musculação em dia</li>
+                  <li>Equipe presente</li>
+                  <li>Planos para sua rotina</li>
+                  <li>Preços imperdíveis</li>
+                </ul>
+              </div>
+            </aside>
+
+            <div class="hero-gallery hero-entry" style="--intro-delay: 680ms">
+              <div class="overview-gallery" data-overview-gallery aria-label="Fotos da estrutura da academia">
+                <img class="is-active" src="/assets/overview/web/overview-01.webp" alt="Vista da estrutura da Styllus Fitness Center" />
+                <img src="/assets/overview/web/overview-02.webp" alt="" />
+                <img src="/assets/overview/web/overview-03.webp" alt="" />
+                <img src="/assets/overview/web/overview-04.webp" alt="" />
+                <img src="/assets/overview/web/overview-05.webp" alt="" />
+                <div class="overview-gallery-label"><span aria-hidden="true"></span> Estrutura Styllus</div>
+                <button class="overview-gallery-open" type="button" aria-label="Ampliar foto da estrutura"></button>
+              </div>
             </div>
-          </aside>
+          </div>
         </div>
         <a class="scroll-cue" href="#styllus" aria-label="Rolar para a próxima seção">
           <span></span>
@@ -158,10 +172,16 @@
 
       <section class="about section" id="estrutura" aria-labelledby="about-title">
         <div class="container about-layout">
-          <div class="about-visual reveal" style="--reveal-delay: 0ms" aria-label="Espaço reservado para futura fotografia da estrutura da academia">
-            <div class="visual-grid" aria-hidden="true"></div>
-            <div class="visual-mark" aria-hidden="true">S</div>
-            <p>Estrutura pronta<br /><strong>Para seu treino</strong></p>
+          <div class="about-visual reveal" style="--reveal-delay: 0ms">
+            <div class="overview-gallery overview-gallery-large" data-overview-gallery aria-label="Fotos da estrutura da academia">
+              <img class="is-active" src="/assets/overview/web/overview-01.webp" alt="Vista da estrutura da Styllus Fitness Center" />
+              <img src="/assets/overview/web/overview-02.webp" alt="" loading="lazy" />
+              <img src="/assets/overview/web/overview-03.webp" alt="" loading="lazy" />
+              <img src="/assets/overview/web/overview-04.webp" alt="" loading="lazy" />
+              <img src="/assets/overview/web/overview-05.webp" alt="" loading="lazy" />
+              <div class="overview-gallery-label"><span aria-hidden="true"></span> Estrutura Styllus</div>
+              <button class="overview-gallery-open" type="button" aria-label="Ampliar foto da estrutura"></button>
+            </div>
           </div>
           <div class="about-copy reveal" style="--reveal-delay: 110ms">
             <div class="about-heading">
@@ -207,6 +227,13 @@
         </div>
       </section>
     </main>
+
+    <dialog class="gallery-lightbox" data-gallery-lightbox aria-label="Foto ampliada da estrutura">
+      <button class="gallery-lightbox-nav gallery-lightbox-prev" type="button" aria-label="Foto anterior" data-gallery-previous>‹</button>
+      <button class="gallery-lightbox-close" type="button" aria-label="Fechar foto ampliada">×</button>
+      <img src="" alt="Foto ampliada da estrutura da Styllus Fitness Center" />
+      <button class="gallery-lightbox-nav gallery-lightbox-next" type="button" aria-label="Próxima foto" data-gallery-next>›</button>
+    </dialog>
 
     <footer class="site-footer">
       <div class="container footer-main">
