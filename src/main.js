@@ -164,6 +164,21 @@ function activateGalleryPhoto(gallery, nextIndex) {
 }
 
 function fullPhotoSource(photo) {
+  const srcset = photo.getAttribute('srcset') || photo.srcset;
+  if (srcset) {
+    const candidates = srcset
+      .split(',')
+      .map((entry) => entry.trim().split(/\s+/))
+      .filter(([url]) => Boolean(url));
+    if (candidates.length > 0) {
+      const highest = candidates.reduce((best, curr) => {
+        const bestWidth = parseInt(best[1] || '0', 10);
+        const currWidth = parseInt(curr[1] || '0', 10);
+        return currWidth > bestWidth ? curr : best;
+      });
+      if (highest[0]) return highest[0];
+    }
+  }
   return photo.dataset.full || photo.currentSrc || photo.src;
 }
 
@@ -212,6 +227,9 @@ galleryLightbox?.querySelector('[data-gallery-previous]').addEventListener('clic
 galleryLightbox?.querySelector('[data-gallery-next]').addEventListener('click', () => updateExpandedPhoto(1));
 
 galleryLightbox?.addEventListener('close', () => { expandedGallery = null; });
+galleryLightbox?.addEventListener('click', (event) => {
+  if (event.target === galleryLightbox) galleryLightbox.close();
+});
 galleryLightbox?.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowLeft') updateExpandedPhoto(-1);
   if (event.key === 'ArrowRight') updateExpandedPhoto(1);
