@@ -1,6 +1,9 @@
-import '@fontsource/oswald/latin-500.css';
-import '@fontsource/oswald/latin-600.css';
-import '@fontsource/oswald/latin-700.css';
+import '@fontsource/anton/latin-400.css';
+import '@fontsource/barlow/latin-300.css';
+import '@fontsource/barlow/latin-400.css';
+import '@fontsource/barlow/latin-600.css';
+import '@fontsource/barlow/latin-700.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
 import './styles.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -112,7 +115,6 @@ if (!prefersReduced) {
     { selector: '.hero-lockup',       delay: 0.08 },
     { selector: '.hero-values-panel', delay: 0.52 },
     { selector: '.hero-gallery',      delay: 0.68 },
-    { selector: 'h1',                 delay: 0.36 },
     { selector: '.hero-lead',         delay: 0.60 },
     { selector: '.hero-support',      delay: 0.76 },
     { selector: '.hero-actions',      delay: 0.92 },
@@ -128,6 +130,17 @@ if (!prefersReduced) {
       delay,
       ease: 'power3.out',
       clearProps: 'all',
+    });
+  });
+
+  // Título: linhas revelam por trás da máscara de overflow
+  document.querySelectorAll('.hero h1 .line-inner').forEach((line, index) => {
+    gsap.from(line, {
+      yPercent: 110,
+      duration: 0.9,
+      delay: 0.3 + index * 0.14,
+      ease: 'power4.out',
+      clearProps: 'transform',
     });
   });
 }
@@ -150,13 +163,17 @@ function activateGalleryPhoto(gallery, nextIndex) {
   state.photos[state.activeIndex].classList.add('is-active');
 }
 
+function fullPhotoSource(photo) {
+  return photo.dataset.full || photo.currentSrc || photo.src;
+}
+
 function updateExpandedPhoto(step) {
   if (!expandedGallery || !galleryLightboxImage) return;
   const state = galleryStates.get(expandedGallery);
   if (!state) return;
 
   activateGalleryPhoto(expandedGallery, state.activeIndex + step);
-  galleryLightboxImage.src = state.photos[state.activeIndex].currentSrc || state.photos[state.activeIndex].src;
+  galleryLightboxImage.src = fullPhotoSource(state.photos[state.activeIndex]);
 }
 
 galleryLightbox?.querySelector('.gallery-lightbox-close').addEventListener('click', () => {
@@ -194,7 +211,7 @@ document.querySelectorAll('[data-overview-gallery]').forEach((gallery) => {
     const activePhoto = gallery.querySelector('img.is-active');
     if (!galleryLightbox || !galleryLightboxImage || !activePhoto) return;
     expandedGallery = gallery;
-    galleryLightboxImage.src = activePhoto.currentSrc || activePhoto.src;
+    galleryLightboxImage.src = fullPhotoSource(activePhoto);
     galleryLightbox.showModal();
   });
 });

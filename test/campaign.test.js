@@ -26,11 +26,12 @@ test('usa os assets oficiais transparentes e preserva os originais', async () =>
 test('o markup prioriza estrutura, suporte e planos em vez de campanha temporal', async () => {
   const markup = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
-  assert.match(markup, /maximum-scale=1\.0, user-scalable=no/);
+  assert.match(markup, /viewport-fit=cover/);
   assert.match(markup, /styllus-lockup\.webp/);
   assert.match(markup, /styllus-mark-header\.webp/);
   assert.match(markup, /rel="icon" type="image\/webp" href="\/assets\/styllus-mark-header\.webp"/);
-  assert.match(markup, /ELA ESTÁ<br \/><em>DE VOLTA\.<\/em>/);
+  assert.match(markup, /<span class="line-inner">ELA ESTÁ<\/span>/);
+  assert.match(markup, /<span class="line-inner"><em>DE VOLTA\.<\/em><\/span>/);
   assert.match(markup, /Equipamentos de musculação em dia/);
   assert.match(markup, /Equipe presente/);
   assert.match(markup, /Planos para sua rotina/);
@@ -69,4 +70,19 @@ test('converte as fotos do overview para formatos web compatíveis', async () =>
     'assets/overview/web/overview-05.webp',
   ];
   await Promise.all(photos.map((photo) => stat(new URL(`../${photo}`, import.meta.url))));
+
+  // Variantes responsivas (srcset) e versão ampliada (lightbox) a partir dos HEIC
+  const variants = ['800', '2560'];
+  await Promise.all(
+    photos.flatMap((photo) =>
+      variants.map((size) => stat(new URL(`../${photo.replace('.webp', `-${size}.webp`)}`, import.meta.url)))),
+  );
+
+  const markup = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const images = markup.match(/<img\s[^>]*overview-\d\d[^>]*>/g) ?? [];
+  assert.equal(images.length, 10); // 2 galerias × 5 fotos
+  for (const image of images) {
+    assert.match(image, /srcset="[^"]*800w[^"]*1600w[^"]*2560w/);
+    assert.match(image, /data-full="[^"]*2560\.webp"/);
+  }
 });

@@ -146,13 +146,13 @@ test('foto ativa da galeria abre ampliada ao clicar', async ({ page }) => {
   await page.locator('.hero-gallery .overview-gallery-open').click();
   const lightbox = page.locator('[data-gallery-lightbox]');
   await expect(lightbox).toBeVisible();
-  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-01\.webp/);
+  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-01-2560\.webp/);
 
   await lightbox.locator('[data-gallery-next]').click();
-  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-02\.webp/);
+  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-02-2560\.webp/);
 
   await lightbox.locator('[data-gallery-previous]').click();
-  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-01\.webp/);
+  await expect(lightbox.locator('img')).toHaveAttribute('src', /overview-01-2560\.webp/);
 
   await lightbox.locator('.gallery-lightbox-close').click();
   await expect(lightbox).not.toBeVisible();

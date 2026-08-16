@@ -2,21 +2,29 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/webp" href="/assets/styllus-mark-header.webp" />
     <meta name="theme-color" content="#05070a" />
     <meta
       name="description"
-      content="Conheça a Styllus Fitness Center: equipamentos Santana Fitness, equipe presente e planos para sua rotina."
+      content="A Styllus está de volta: estrutura renovada com equipamentos Santana Fitness, equipe presente e planos para a sua rotina. Venha treinar em Palhoça/SC."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:title" content="Styllus Fitness Center" />
     <meta
       property="og:description"
-      content="Conheça a Styllus Fitness Center: equipamentos Santana Fitness, equipe presente e planos para sua rotina."
+      content="A Styllus está de volta: estrutura renovada com equipamentos Santana Fitness, equipe presente e planos para a sua rotina. Venha treinar em Palhoça/SC."
     />
     <title>Styllus Fitness Center</title>
+    <link rel="preload" as="image" href="/assets/styllus-lockup.webp" />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/overview/web/overview-01.webp"
+      imagesrcset="/assets/overview/web/overview-01-800.webp 800w, /assets/overview/web/overview-01.webp 1600w, /assets/overview/web/overview-01-2560.webp 2560w"
+      imagesizes="(max-width: 600px) calc(100vw - 32px), (max-width: 960px) 650px, 560px"
+    />
   </head>
   <body>
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -48,17 +56,21 @@
 
     <main id="conteudo">
       <section class="hero" id="inicio" aria-labelledby="hero-title">
+        <div class="visual-grid" aria-hidden="true"></div>
         <div class="container hero-content">
-          <img class="hero-lockup hero-entry" style="--intro-delay: 80ms" src="/assets/styllus-lockup.webp" width="960" height="960" alt="Styllus Fitness Center — força, saúde, disciplina e resultados" />
+          <img class="hero-lockup" src="/assets/styllus-lockup.webp" width="960" height="960" alt="Styllus Fitness Center — força, saúde, disciplina e resultados" />
 
           <div class="hero-heading">
-            <h1 class="hero-entry" style="--intro-delay: 360ms" id="hero-title">ELA ESTÁ<br /><em>DE VOLTA.</em></h1>
+            <h1 class="" id="hero-title">
+              <span class="line"><span class="line-inner">ELA ESTÁ</span></span>
+              <span class="line"><span class="line-inner"><em>DE VOLTA.</em></span></span>
+            </h1>
           </div>
 
           <div class="hero-details">
-            <p class="hero-lead hero-entry" style="--intro-delay: 600ms">Suporte para <strong>evoluir.</strong></p>
-            <p class="hero-support hero-entry" style="--intro-delay: 760ms">Equipamentos Santana Fitness, aparelhos acompanhados de perto e uma equipe pronta para ajudar no seu treino.</p>
-            <div class="hero-actions hero-entry" style="--intro-delay: 920ms">
+            <p class="hero-lead">Estrutura renovada. <strong>Energia de sempre.</strong></p>
+            <p class="hero-support">Equipamentos Santana Fitness, aparelhos revisados de perto e uma equipe pronta para ajudar no seu treino.</p>
+            <div class="hero-actions">
               <a class="button button-primary" data-whatsapp data-hero-cta href="#">
                 Conhecer os planos
                 <span aria-hidden="true">↗</span>
@@ -71,7 +83,7 @@
 
           <div class="hero-media">
             <aside class="hero-proofs" aria-label="Diferenciais da Styllus">
-              <div class="hero-values-panel hero-entry" style="--intro-delay: 520ms">
+              <div class="hero-values-panel">
                 <p>O que você encontra</p>
                 <ul>
                   <li>Equipamentos de musculação em dia</li>
@@ -82,13 +94,22 @@
               </div>
             </aside>
 
-            <div class="hero-gallery hero-entry" style="--intro-delay: 680ms">
+            <div class="hero-gallery">
               <div class="overview-gallery" data-overview-gallery aria-label="Fotos da estrutura da academia">
-                <img class="is-active" src="/assets/overview/web/overview-01.webp" alt="Vista da estrutura da Styllus Fitness Center" />
-                <img src="/assets/overview/web/overview-02.webp" alt="" />
-                <img src="/assets/overview/web/overview-03.webp" alt="" />
-                <img src="/assets/overview/web/overview-04.webp" alt="" />
-                <img src="/assets/overview/web/overview-05.webp" alt="" />
+                <img
+                  class="is-active"
+                  src="/assets/overview/web/overview-01.webp"
+                  srcset="/assets/overview/web/overview-01-800.webp 800w, /assets/overview/web/overview-01.webp 1600w, /assets/overview/web/overview-01-2560.webp 2560w"
+                  sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 960px) 650px, 560px"
+                  data-full="/assets/overview/web/overview-01-2560.webp"
+                  alt="Vista da estrutura da Styllus Fitness Center"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+                <img src="/assets/overview/web/overview-02.webp" srcset="/assets/overview/web/overview-02-800.webp 800w, /assets/overview/web/overview-02.webp 1600w, /assets/overview/web/overview-02-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 960px) 650px, 560px" data-full="/assets/overview/web/overview-02-2560.webp" alt="" loading="lazy" decoding="async" />
+                <img src="/assets/overview/web/overview-03.webp" srcset="/assets/overview/web/overview-03-800.webp 800w, /assets/overview/web/overview-03.webp 1600w, /assets/overview/web/overview-03-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 960px) 650px, 560px" data-full="/assets/overview/web/overview-03-2560.webp" alt="" loading="lazy" decoding="async" />
+                <img src="/assets/overview/web/overview-04.webp" srcset="/assets/overview/web/overview-04-800.webp 800w, /assets/overview/web/overview-04.webp 1600w, /assets/overview/web/overview-04-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 960px) 650px, 560px" data-full="/assets/overview/web/overview-04-2560.webp" alt="" loading="lazy" decoding="async" />
+                <img src="/assets/overview/web/overview-05.webp" srcset="/assets/overview/web/overview-05-800.webp 800w, /assets/overview/web/overview-05.webp 1600w, /assets/overview/web/overview-05-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 960px) 650px, 560px" data-full="/assets/overview/web/overview-05-2560.webp" alt="" loading="lazy" decoding="async" />
                 <div class="overview-gallery-label"><span aria-hidden="true"></span> Estrutura Styllus</div>
                 <button class="overview-gallery-open" type="button" aria-label="Ampliar foto da estrutura"></button>
               </div>
@@ -108,7 +129,7 @@
             <p class="campaign-kicker">A Styllus está</p>
             <h2 id="campaign-title">DE<br /><em>VOLTA.</em></h2>
             <p class="campaign-promo">
-              Estrutura preparada para o seu treino.
+              Estrutura nova.<br />Planos para começar hoje.
             </p>
           </div>
 
@@ -133,7 +154,7 @@
           <div class="story-copy reveal" style="--reveal-delay: 80ms">
             <p class="eyebrow"><span></span> Treino com estrutura</p>
             <h2 class="section-title" id="story-title">O QUE VOCÊ<br /><em>ENCONTRA AQUI.</em></h2>
-            <p class="story-lead">Tudo o que o seu treino precisa para começar bem e continuar evoluindo.</p>
+            <p class="story-lead">Do primeiro treino ao resultado: tudo pronto para você evoluir.</p>
             <p>
               Equipamentos Santana Fitness, aparelhos acompanhados para estarem prontos para uso, ambiente preparado e uma equipe que ajuda você a encontrar o melhor plano para sua rotina.
             </p>
@@ -174,11 +195,19 @@
         <div class="container about-layout">
           <div class="about-visual reveal" style="--reveal-delay: 0ms">
             <div class="overview-gallery overview-gallery-large" data-overview-gallery aria-label="Fotos da estrutura da academia">
-              <img class="is-active" src="/assets/overview/web/overview-01.webp" alt="Vista da estrutura da Styllus Fitness Center" />
-              <img src="/assets/overview/web/overview-02.webp" alt="" loading="lazy" />
-              <img src="/assets/overview/web/overview-03.webp" alt="" loading="lazy" />
-              <img src="/assets/overview/web/overview-04.webp" alt="" loading="lazy" />
-              <img src="/assets/overview/web/overview-05.webp" alt="" loading="lazy" />
+              <img
+                class="is-active"
+                src="/assets/overview/web/overview-01.webp"
+                srcset="/assets/overview/web/overview-01-800.webp 800w, /assets/overview/web/overview-01.webp 1600w, /assets/overview/web/overview-01-2560.webp 2560w"
+                sizes="(max-width: 600px) calc(100vw - 32px), 560px"
+                data-full="/assets/overview/web/overview-01-2560.webp"
+                alt="Vista da estrutura da Styllus Fitness Center"
+                decoding="async"
+              />
+              <img src="/assets/overview/web/overview-02.webp" srcset="/assets/overview/web/overview-02-800.webp 800w, /assets/overview/web/overview-02.webp 1600w, /assets/overview/web/overview-02-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), 560px" data-full="/assets/overview/web/overview-02-2560.webp" alt="" loading="lazy" decoding="async" />
+              <img src="/assets/overview/web/overview-03.webp" srcset="/assets/overview/web/overview-03-800.webp 800w, /assets/overview/web/overview-03.webp 1600w, /assets/overview/web/overview-03-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), 560px" data-full="/assets/overview/web/overview-03-2560.webp" alt="" loading="lazy" decoding="async" />
+              <img src="/assets/overview/web/overview-04.webp" srcset="/assets/overview/web/overview-04-800.webp 800w, /assets/overview/web/overview-04.webp 1600w, /assets/overview/web/overview-04-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), 560px" data-full="/assets/overview/web/overview-04-2560.webp" alt="" loading="lazy" decoding="async" />
+              <img src="/assets/overview/web/overview-05.webp" srcset="/assets/overview/web/overview-05-800.webp 800w, /assets/overview/web/overview-05.webp 1600w, /assets/overview/web/overview-05-2560.webp 2560w" sizes="(max-width: 600px) calc(100vw - 32px), 560px" data-full="/assets/overview/web/overview-05-2560.webp" alt="" loading="lazy" decoding="async" />
               <div class="overview-gallery-label"><span aria-hidden="true"></span> Estrutura Styllus</div>
               <button class="overview-gallery-open" type="button" aria-label="Ampliar foto da estrutura"></button>
             </div>
@@ -219,7 +248,7 @@
         <div class="container final-cta-content reveal" style="--reveal-delay: 0ms">
           <p class="eyebrow centered"><span></span> Styllus Fitness Center <span></span></p>
           <h2 id="contact-title">VENHA TREINAR<br />COM <em>A GENTE.</em></h2>
-          <p>Chame no WhatsApp, conheça a estrutura e encontre o plano ideal para a sua rotina.</p>
+          <p>Chame no WhatsApp, visite a estrutura e saia com um plano para começar ainda esta semana.</p>
           <a class="button button-primary button-large" data-whatsapp href="#">
             Falar sobre planos no WhatsApp
             <span aria-hidden="true">↗</span>
