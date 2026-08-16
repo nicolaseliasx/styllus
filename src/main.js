@@ -167,13 +167,41 @@ function fullPhotoSource(photo) {
   return photo.dataset.full || photo.currentSrc || photo.src;
 }
 
+let lightboxSwapToken = 0;
+
+// Troca a foto do lightbox somente depois de decodificada: evita flash vazio
+// ou exibição da foto anterior enquanto a próxima ainda carrega.
+async function setLightboxPhoto(src) {
+  if (!galleryLightboxImage || galleryLightboxImage.src === src) return;
+  const token = ++lightboxSwapToken;
+  try {
+    const preload = new Image();
+    preload.src = src;
+    await preload.decode();
+  } catch {
+    // decodificação falhou (ex.: rede lenta caiu no meio): troca direto
+  }
+  if (token !== lightboxSwapToken) return; // clique mais novo venceu
+  galleryLightboxImage.src = src;
+}
+
+function preloadLightboxNeighbors(state, index) {
+  [index + 1, index - 1].forEach((neighbor) => {
+    const photo = state.photos[(neighbor + state.photos.length) % state.photos.length];
+    if (!photo) return;
+    const preload = new Image();
+    preload.src = fullPhotoSource(photo);
+  });
+}
+
 function updateExpandedPhoto(step) {
   if (!expandedGallery || !galleryLightboxImage) return;
   const state = galleryStates.get(expandedGallery);
   if (!state) return;
 
   activateGalleryPhoto(expandedGallery, state.activeIndex + step);
-  galleryLightboxImage.src = fullPhotoSource(state.photos[state.activeIndex]);
+  setLightboxPhoto(fullPhotoSource(state.photos[state.activeIndex]));
+  preloadLightboxNeighbors(state, state.activeIndex);
 }
 
 galleryLightbox?.querySelector('.gallery-lightbox-close').addEventListener('click', () => {
@@ -198,6 +226,7 @@ document.querySelectorAll('[data-overview-gallery]').forEach((gallery, galleryIn
   if (!prefersReduced) {
     window.setTimeout(() => {
       window.setInterval(() => {
+        if (expandedGallery) return; // lightbox aberto: pausa a rotação
         const state = galleryStates.get(gallery);
         activateGalleryPhoto(gallery, state.activeIndex + 1);
       }, GALLERY_INTERVAL);
@@ -213,6 +242,9 @@ document.querySelectorAll('[data-overview-gallery]').forEach((gallery) => {
     expandedGallery = gallery;
     galleryLightboxImage.src = fullPhotoSource(activePhoto);
     galleryLightbox.showModal();
+    const state = galleryStates.get(gallery);
+    const index = state ? state.photos.indexOf(activePhoto) : -1;
+    if (index >= 0) preloadLightboxNeighbors(state, index);
   });
 });
 
